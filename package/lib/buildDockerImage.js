@@ -1,5 +1,6 @@
 'use strict'
 
+const path = require('path')
 const { Context } = require('@serverless/core')
 const Docker = require('@serverless/docker')
 const { getName, getTag, getRepository } = require('../../shared/utils')
@@ -7,13 +8,14 @@ const { getName, getTag, getRepository } = require('../../shared/utils')
 function buildDockerImage(funcName) {
   const { service } = this.serverless.service
   const funcObj = this.serverless.service.getFunction(funcName)
+  const buildContext = funcObj.context || process.cwd
   const { username } = this.serverless.service.provider.docker
   const name = getName(service, funcName)
 
   const ctx = new Context()
   const docker = new Docker(undefined, ctx)
 
-  const context = process.cwd()
+  const context = path.resolve(buildContext)
   const dockerfile = funcObj.handler
   const repository = getRepository(username, name)
   const tag = getTag()
