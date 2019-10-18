@@ -14,7 +14,9 @@
   "dependencies": {
     "@serverless/core": "^1.1.1",
     "@serverless/docker": "^0.1.0",
-    "@serverless/knative-serving": "^0.1.0"
+    "@serverless/knative-serving": "^0.1.0",
+    "bluebird": "^3.7.1",
+    "node-fetch": "^2.6.0"
   },
   "devDependencies": {
     "babel-eslint": "^9.0.0",
