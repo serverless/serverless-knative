@@ -1,6 +1,6 @@
 {
   "name": "serverless-knative",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "./index.js",
   "publishConfig": {
     "access": "public"
@@ -16,6 +16,7 @@
     "@serverless/docker": "^0.1.0",
     "@serverless/knative-serving": "^0.1.0",
     "bluebird": "^3.7.1",
+    "chalk": "^2.4.2",
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
