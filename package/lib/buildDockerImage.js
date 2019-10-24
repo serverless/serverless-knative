@@ -2,7 +2,7 @@
 
 const path = require('path')
 const { Context } = require('@serverless/core')
-const Docker = require('@serverless/docker-image')
+const DockerImage = require('@serverless/docker-image')
 const { getName, getTag, getRepository } = require('../../shared/utils')
 
 function buildDockerImage(funcName) {
@@ -13,7 +13,7 @@ function buildDockerImage(funcName) {
   const name = getName(service, funcName)
 
   const ctx = new Context()
-  const docker = new Docker(undefined, ctx)
+  const docker = new DockerImage(undefined, ctx)
 
   const context = path.resolve(buildContext)
   const dockerfile = funcObj.handler

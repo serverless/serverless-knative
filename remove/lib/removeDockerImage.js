@@ -2,7 +2,7 @@
 
 const BbPromise = require('bluebird')
 const { Context } = require('@serverless/core')
-const Docker = require('@serverless/docker-image')
+const DockerImage = require('@serverless/docker-image')
 const { getName, getTag, getRepository } = require('../../shared/utils')
 
 function removeDockerImage(funcName) {
@@ -12,7 +12,7 @@ function removeDockerImage(funcName) {
   const name = getName(service, funcName)
 
   const ctx = new Context()
-  const docker = new Docker(undefined, ctx)
+  const dockerImage = new DockerImage(undefined, ctx)
 
   const context = process.cwd()
   const dockerfile = funcObj.handler
@@ -29,7 +29,7 @@ function removeDockerImage(funcName) {
   this.serverless.cli.log(`Removing Docker image "${repository}:${tag}"...`)
 
   // Docker images might've been already removed from the host, so we silently ignore errors
-  return docker.remove(inputs).catch(() => BbPromise.resolve())
+  return dockerImage.remove(inputs).catch(() => BbPromise.resolve())
 }
 
 module.exports = removeDockerImage

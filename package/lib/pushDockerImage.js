@@ -1,7 +1,7 @@
 'use strict'
 
 const { Context } = require('@serverless/core')
-const Docker = require('@serverless/docker-image')
+const DockerImage = require('@serverless/docker-image')
 const { getName, getTag, getRepository } = require('../../shared/utils')
 
 function pushDockerImage(funcName) {
@@ -17,9 +17,9 @@ function pushDockerImage(funcName) {
   }
 
   const ctx = new Context()
-  const docker = new Docker(undefined, ctx)
+  const dockerImage = new DockerImage(undefined, ctx)
   // manually setting the credentials of the child-component here
-  docker.context.credentials = credentials
+  dockerImage.context.credentials = credentials
 
   const repository = getRepository(username, name)
   const tag = getTag()
@@ -31,7 +31,7 @@ function pushDockerImage(funcName) {
 
   this.serverless.cli.log(`Pushing "${repository}:${tag}" to Container Registry...`)
 
-  return docker.push(inputs)
+  return dockerImage.push(inputs)
 }
 
 module.exports = pushDockerImage
