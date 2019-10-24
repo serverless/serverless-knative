@@ -2,7 +2,7 @@
 
 const BbPromise = require('bluebird')
 const { Context } = require('@serverless/core')
-const Docker = require('@serverless/docker')
+const Docker = require('@serverless/docker-image')
 const { getName, getTag, getRepository } = require('../../shared/utils')
 
 function removeDockerImage(funcName) {

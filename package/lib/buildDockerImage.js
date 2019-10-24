@@ -2,7 +2,7 @@
 
 const path = require('path')
 const { Context } = require('@serverless/core')
-const Docker = require('@serverless/docker')
+const Docker = require('@serverless/docker-image')
 const { getName, getTag, getRepository } = require('../../shared/utils')
 
 function buildDockerImage(funcName) {
