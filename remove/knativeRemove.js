@@ -1,8 +1,8 @@
 'use strict'
 
 const BbPromise = require('bluebird')
+const removeNamespace = require('./lib/removeNamespace')
 const removeDockerImage = require('./lib/removeDockerImage')
-const removeKnativeService = require('./lib/removeKnativeService.js')
 
 class KnativeRemove {
   constructor(serverless, options) {
@@ -10,15 +10,17 @@ class KnativeRemove {
     this.options = options || {}
     this.provider = this.serverless.getProvider('knative')
 
-    Object.assign(this, { removeDockerImage, removeKnativeService })
+    Object.assign(this, { removeNamespace, removeDockerImage })
 
     this.hooks = {
       'remove:remove': () =>
-        BbPromise.all(
-          this.serverless.service
-            .getAllFunctions()
-            .map((func) => this.removeDockerImage(func).then(() => this.removeKnativeService(func)))
-        )
+        BbPromise.bind(this)
+          .then(this.removeNamespace)
+          .then(
+            BbPromise.all(
+              this.serverless.service.getAllFunctions().map((func) => this.removeDockerImage(func))
+            )
+          )
     }
   }
 }

@@ -2,11 +2,11 @@
 
 const { Context } = require('@serverless/core')
 const DockerImage = require('@serverless/docker-image')
-const { getName, getTag, getRepository } = require('../../shared/utils')
+const { getFuncName, getTag, getRepository } = require('../../shared/utils')
 
 function pushDockerImage(funcName) {
   const { service } = this.serverless.service
-  const name = getName(service, funcName)
+  const name = getFuncName(service, funcName)
   const { username } = this.serverless.service.provider.docker
   const { password } = this.serverless.service.provider.docker
   const credentials = {

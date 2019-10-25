@@ -1,6 +1,7 @@
 'use strict'
 
 const BbPromise = require('bluebird')
+const ensureNamespace = require('./lib/ensureNamespace')
 const ensureKnativeService = require('./lib/ensureKnativeService')
 
 class KnativeDeploy {
@@ -9,13 +10,19 @@ class KnativeDeploy {
     this.options = options || {}
     this.provider = this.serverless.getProvider('knative')
 
-    Object.assign(this, { ensureKnativeService })
+    Object.assign(this, { ensureNamespace, ensureKnativeService })
 
     this.hooks = {
       'deploy:deploy': () =>
-        BbPromise.all(
-          this.serverless.service.getAllFunctions().map((func) => this.ensureKnativeService(func))
-        )
+        BbPromise.bind(this)
+          .then(this.ensureNamespace)
+          .then(
+            BbPromise.all(
+              this.serverless.service
+                .getAllFunctions()
+                .map((func) => this.ensureKnativeService(func))
+            )
+          )
     }
   }
 }

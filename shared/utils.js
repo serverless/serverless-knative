@@ -3,8 +3,8 @@
 // TODO: make all of these functions configurable from the outside
 // the user should be able to manipulate those
 
-function getName(service, funcName) {
-  return `${service}-${funcName}`.toLowerCase()
+function getNamespace(service) {
+  return `sls-${service}`
 }
 
 function getRepository(username, name) {
@@ -16,14 +16,18 @@ function getTag() {
   return 'latest'
 }
 
-function getFuncUrl(name) {
-  // TODO: `default` is the K8S namespace which might change to be the `service` name
-  return `${name}.default.example.com`
+function getFuncName(service, funcName) {
+  return `${service}-${funcName}`.toLowerCase()
+}
+
+function getFuncUrl(service, funcName) {
+  return `${getFuncName(service, funcName)}.${getNamespace(service)}.example.com`
 }
 
 module.exports = {
-  getName,
+  getNamespace,
   getRepository,
   getTag,
+  getFuncName,
   getFuncUrl
 }

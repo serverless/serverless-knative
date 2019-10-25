@@ -2,7 +2,7 @@
 
 const { Context } = require('@serverless/core')
 const KnativeServing = require('@serverless/knative-serving')
-const { getName, getRepository, getTag } = require('../../shared/utils')
+const { getNamespace, getFuncName, getRepository, getTag } = require('../../shared/utils')
 
 function ensureKnativeService(funcName) {
   const { service } = this.serverless.service
@@ -11,14 +11,16 @@ function ensureKnativeService(funcName) {
   const ctx = new Context()
   const serving = new KnativeServing(undefined, ctx)
 
-  const name = getName(service, funcName)
+  const namespace = getNamespace(service)
+  const name = getFuncName(service, funcName)
   const repository = getRepository(username, name)
   const tag = getTag()
 
   const inputs = {
     name,
     repository,
-    tag
+    tag,
+    namespace
   }
 
   this.serverless.cli.log('Deploying Knative service...')
