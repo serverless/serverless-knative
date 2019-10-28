@@ -14,7 +14,11 @@ function ensureNamespace() {
   const name = getNamespace(service, stage)
 
   const inputs = {
-    name
+    name,
+    labels: {
+      // enable Knative Eventing for this namespace
+      'knative-eventing-injection': 'enabled'
+    }
   }
 
   this.serverless.cli.log(`Deploying Kubernetes namespace "${inputs.name}"...`)
