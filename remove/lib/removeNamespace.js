@@ -8,11 +8,12 @@ const { getNamespace } = require('../../shared/utils')
 
 function removeNamespace() {
   const { service } = this.serverless.service
+  const stage = this.provider.getStage()
 
   const ctx = new Context()
   const namespace = new KubernetesNamespace(undefined, ctx)
 
-  const name = getNamespace(service)
+  const name = getNamespace(service, stage)
 
   const inputs = {
     name

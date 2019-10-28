@@ -7,8 +7,9 @@ const { getNamespace, getFuncUrl } = require('../../shared/utils')
 
 function displayInfo() {
   const { service } = this.serverless.service
+  const stage = this.provider.getStage()
 
-  const namespace = getNamespace(service)
+  const namespace = getNamespace(service, stage)
 
   const ctx = new Context()
   const serving = new KnativeServing(undefined, ctx)
@@ -29,7 +30,7 @@ function displayInfo() {
     }
     functionNames.forEach((funcName) => {
       message += `${chalk.yellow(funcName)}:\n`
-      message += `  ${chalk.yellow('url:')} ${getFuncUrl(service, funcName)}\n`
+      message += `  ${chalk.yellow('url:')} ${getFuncUrl(service, funcName, stage)}\n`
     })
 
     this.serverless.cli.consoleLog(message)

@@ -3,8 +3,8 @@
 // TODO: make all of these functions configurable from the outside
 // the user should be able to manipulate those
 
-function getNamespace(service) {
-  return `sls-${service}`
+function getNamespace(service, stage) {
+  return `sls-${service}-${stage}`
 }
 
 function getRepository(username, name) {
@@ -20,8 +20,8 @@ function getFuncName(service, funcName) {
   return `${service}-${funcName}`.toLowerCase()
 }
 
-function getFuncUrl(service, funcName) {
-  return `${getFuncName(service, funcName)}.${getNamespace(service)}.example.com`
+function getFuncUrl(service, funcName, stage) {
+  return `${getFuncName(service, funcName)}.${getNamespace(service, stage)}.example.com`
 }
 
 module.exports = {

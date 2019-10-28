@@ -7,11 +7,12 @@ const { getNamespace, getFuncName, getRepository, getTag } = require('../../shar
 function ensureKnativeService(funcName) {
   const { service } = this.serverless.service
   const { username } = this.serverless.service.provider.docker
+  const stage = this.provider.getStage()
 
   const ctx = new Context()
   const serving = new KnativeServing(undefined, ctx)
 
-  const namespace = getNamespace(service)
+  const namespace = getNamespace(service, stage)
   const name = getFuncName(service, funcName)
   const repository = getRepository(username, name)
   const tag = getTag()
