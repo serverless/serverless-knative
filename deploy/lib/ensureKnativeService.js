@@ -24,7 +24,7 @@ function ensureKnativeService(funcName) {
     namespace
   }
 
-  this.serverless.cli.log('Deploying Knative service...')
+  this.serverless.cli.log(`Deploying Knative service for function "${inputs.name}"...`)
 
   return serving.default(inputs)
 }
