@@ -5,19 +5,10 @@ const ensureNamespace = require('./lib/ensureNamespace')
 const ensureKnativeService = require('./lib/ensureKnativeService')
 const ensureKnativeTrigger = require('./lib/ensureKnativeTrigger')
 
-function isEventValid(funcName, eventName, eventConfig) {
+function isEventValid(funcName, eventName) {
   // we only support `custom` events for now...
   if (eventName !== 'custom') {
     this.serverless.cli.log(`Unknown event "${eventName}" for function "${funcName}"`)
-    return false
-  }
-
-  if (!eventConfig.filter) {
-    const msg = [
-      `Missing "filter" configuration on event "${eventName}" for function "${funcName}" `,
-      `Skipping trigger deployment...`
-    ].join('')
-    this.serverless.cli.log(msg)
     return false
   }
 
@@ -40,7 +31,7 @@ function deployEvents() {
         events.map((event) => {
           const eventName = Object.keys(event)[0]
           const eventConfig = event[eventName]
-          if (isEventValid.call(this, funcName, eventName, eventConfig)) {
+          if (isEventValid.call(this, funcName, eventName)) {
             return this.ensureKnativeTrigger(funcName, eventName, eventConfig)
           }
           return BbPromise.resolve()
