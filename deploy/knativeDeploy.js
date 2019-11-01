@@ -40,7 +40,7 @@ function deployEvents() {
         events.map((event) => {
           const eventName = Object.keys(event)[0]
           const eventConfig = event[eventName]
-          if (isEventValid(funcName, eventName, eventConfig)) {
+          if (isEventValid.call(this, funcName, eventName, eventConfig)) {
             return this.ensureKnativeTrigger(funcName, eventName, eventConfig)
           }
           return BbPromise.resolve()
