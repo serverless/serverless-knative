@@ -4,8 +4,8 @@ const { Context } = require('@serverless/core')
 const KnativeEventing = require('@serverless/knative-eventing')
 const { getNamespace, getFuncName } = require('../../shared/utils')
 
-function ensureKnativeTrigger(funcName, eventName, eventConfig) {
-  const { filter } = eventConfig
+function ensureKnativeEvent(funcName, eventName, config) {
+  const { knativeGroup, knativeVersion, kind, spec } = config
   const { service } = this.serverless.service
   const stage = this.provider.getStage()
 
@@ -18,11 +18,11 @@ function ensureKnativeTrigger(funcName, eventName, eventConfig) {
   const inputs = {
     // TODO: this should be unique since we can have multiple such event definitions
     name: `${sinkName}-event-${eventName}`,
-    sink: {
-      name: sinkName
-    },
-    filter,
-    namespace
+    knativeGroup,
+    knativeVersion,
+    namespace,
+    kind,
+    spec
   }
 
   this.serverless.cli.log(`Deploying Knative trigger "${inputs.name}"...`)
@@ -30,4 +30,4 @@ function ensureKnativeTrigger(funcName, eventName, eventConfig) {
   return eventing.default(inputs)
 }
 
-module.exports = ensureKnativeTrigger
+module.exports = ensureKnativeEvent

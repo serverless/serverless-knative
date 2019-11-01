@@ -3,17 +3,9 @@
 const BbPromise = require('bluebird')
 const ensureNamespace = require('./lib/ensureNamespace')
 const ensureKnativeService = require('./lib/ensureKnativeService')
-const ensureKnativeTrigger = require('./lib/ensureKnativeTrigger')
-
-function isEventValid(funcName, eventName) {
-  // we only support `custom` events for now...
-  if (eventName !== 'custom') {
-    this.serverless.cli.log(`Unknown event "${eventName}" for function "${funcName}"`)
-    return false
-  }
-
-  return true
-}
+const ensureKnativeEvent = require('./lib/ensureKnativeEvent')
+const getKnativeEventConfig = require('./lib/getKnativeEventConfig')
+const { getFuncName } = require('../shared/utils')
 
 function deployFunctions() {
   const functions = this.serverless.service.getAllFunctions()
@@ -22,6 +14,7 @@ function deployFunctions() {
 }
 
 function deployEvents() {
+  const { service } = this.serverless.service
   const functions = this.serverless.service.getAllFunctions()
   let eventPromises = []
   functions.forEach((funcName) => {
@@ -29,10 +22,12 @@ function deployEvents() {
     if (events.length) {
       eventPromises = eventPromises.concat(
         events.map((event) => {
-          const eventName = Object.keys(event)[0]
-          const eventConfig = event[eventName]
-          if (isEventValid.call(this, funcName, eventName)) {
-            return this.ensureKnativeTrigger(funcName, eventName, eventConfig)
+          const evtName = Object.keys(event)[0]
+          const evtConfig = event[evtName]
+          const sinkName = getFuncName(service, funcName)
+          const config = getKnativeEventConfig.call(this, sinkName, evtName, evtConfig)
+          if (config) {
+            return this.ensureKnativeEvent(funcName, evtName, config)
           }
           return BbPromise.resolve()
         })
@@ -53,7 +48,7 @@ class KnativeDeploy {
       deployEvents,
       ensureNamespace,
       ensureKnativeService,
-      ensureKnativeTrigger
+      ensureKnativeEvent
     })
 
     this.hooks = {
