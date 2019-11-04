@@ -22,12 +22,12 @@ function deployEvents() {
     if (events.length) {
       eventPromises = eventPromises.concat(
         events.map((event) => {
-          const evtName = Object.keys(event)[0]
-          const evtConfig = event[evtName]
+          const eventName = Object.keys(event)[0]
+          const eventConfig = event[eventName]
           const sinkName = getFuncName(service, funcName)
-          const config = getKnativeEventConfig.call(this, sinkName, evtName, evtConfig)
+          const config = this.getKnativeEventConfig(sinkName, eventName, eventConfig)
           if (config) {
-            return this.ensureKnativeEvent(funcName, evtName, config)
+            return this.ensureKnativeEvent(funcName, eventName, config)
           }
           return BbPromise.resolve()
         })
@@ -48,12 +48,13 @@ class KnativeDeploy {
       deployEvents,
       ensureNamespace,
       ensureKnativeService,
-      ensureKnativeEvent
+      ensureKnativeEvent,
+      getKnativeEventConfig
     })
 
     this.hooks = {
       // TODO: add validation which checks if service has functions
-      // 'before:deploy:deploy': () => { ... }
+      // 'before:deploy:deploy: () => { ... }`
       'deploy:deploy': () => {
         return BbPromise.bind(this)
           .then(this.ensureNamespace)
