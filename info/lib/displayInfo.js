@@ -30,28 +30,13 @@ function displayInfo() {
     }
     functionNames.forEach((funcName) => {
       message += `${chalk.yellow(funcName)}:\n`
-      message += `  ${chalk.yellow('url:')} ${getFuncUrl(service, funcName, stage)}\n`
+      message += `  - ${chalk.yellow('url:')} ${getFuncUrl(service, funcName, stage)}\n`
       const events = this.serverless.service.getAllEventsInFunction(funcName)
       if (events.length) {
         events.forEach((event) => {
           const eventName = Object.keys(event)[0]
-          const eventConfig = event[eventName]
-          if (eventConfig.filter) {
-            // get the attribute filters
-            const { attributes } = eventConfig.filter
-            const attributeFilters = Object.keys(attributes).map(
-              (attributeName) => `${attributeName}: ${attributes[attributeName]}`
-            )
-            message += `  ${chalk.yellow(eventName + ':')}\n`
-            // add the attribute filters
-            message += '    filter:\n'
-            message += '      attributes:\n'
-            attributeFilters.forEach((attributeFilter) => {
-              message += `        ${attributeFilter}\n`
-            })
-          } else {
-            message += `  ${chalk.yellow(eventName)}\n`
-          }
+          // const eventConfig = event[eventName]
+          message += `  - ${chalk.yellow(eventName)}\n`
         })
       }
     })
