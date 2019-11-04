@@ -1,6 +1,6 @@
 'use strict'
 
-const validEvents = ['custom', 'cron']
+const validEvents = ['custom', 'cron', 'gcpPubSub']
 const knativeVersion = 'v1alpha1'
 
 // TODO: update this when we're dealing with services other
@@ -33,6 +33,26 @@ function getCronConfig(sinkName, eventConfig) {
   }
 }
 
+function getGcpPubSubConfig(sinkName, eventConfig) {
+  const { project, topic } = eventConfig
+  if (!project) {
+    throw new Error('"project" configuration missing for gcpPubSub event.')
+  }
+  if (!topic) {
+    throw new Error('"topic" configuration missing for gcpPubSub event.')
+  }
+  return {
+    kind: 'PullSubscription',
+    knativeGroup: 'pubsub.cloud.run',
+    knativeVersion,
+    spec: {
+      project,
+      topic,
+      sink: getRef(sinkName)
+    }
+  }
+}
+
 function getCustomConfig(sinkName, eventConfig) {
   const { filter } = eventConfig
   return {
@@ -56,6 +76,8 @@ function getKnativeEventConfig(sinkName, eventName, eventConfig) {
 
   if (eventName === 'cron') {
     return getCronConfig(sinkName, eventConfig)
+  } else if (eventName === 'gcpPubSub') {
+    return getGcpPubSubConfig(sinkName, eventConfig)
   }
 
   return getCustomConfig(sinkName, eventConfig)
