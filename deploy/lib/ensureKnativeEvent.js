@@ -2,7 +2,7 @@
 
 const { Context } = require('@serverless/core')
 const KnativeEventing = require('@serverless/knative-eventing')
-const { getNamespace, getFuncName } = require('../../shared/utils')
+const { getNamespace, getFuncName, getEventName } = require('../../shared/utils')
 
 function ensureKnativeEvent(funcName, eventName, config) {
   const { knativeGroup, knativeVersion, kind, spec } = config
@@ -14,10 +14,11 @@ function ensureKnativeEvent(funcName, eventName, config) {
 
   const sinkName = getFuncName(service, funcName)
   const namespace = getNamespace(service, stage)
+  // TODO: this should be unique since we can have multiple such event definitions
+  const name = getEventName(sinkName, eventName)
 
   const inputs = {
-    // TODO: this should be unique since we can have multiple such event definitions
-    name: `${sinkName}-event-${eventName}`,
+    name,
     knativeGroup,
     knativeVersion,
     namespace,

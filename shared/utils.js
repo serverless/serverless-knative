@@ -20,6 +20,10 @@ function getFuncName(service, funcName) {
   return `${service}-${funcName}`.toLowerCase()
 }
 
+function getEventName(sinkName, eventName) {
+  return `${sinkName}-${eventName}`.toLowerCase()
+}
+
 function getFuncUrl(service, funcName, stage) {
   return `${getFuncName(service, funcName)}.${getNamespace(service, stage)}.example.com`
 }
@@ -29,5 +33,6 @@ module.exports = {
   getRepository,
   getTag,
   getFuncName,
+  getEventName,
   getFuncUrl
 }
