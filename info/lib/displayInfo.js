@@ -35,7 +35,6 @@ function displayInfo() {
       if (events.length) {
         events.forEach((event) => {
           const eventName = Object.keys(event)[0]
-          // const eventConfig = event[eventName]
           message += `  - ${chalk.yellow(eventName)}\n`
         })
       }
