@@ -3,6 +3,7 @@
 const BbPromise = require('bluebird')
 const buildDockerImage = require('./lib/buildDockerImage')
 const pushDockerImage = require('./lib/pushDockerImage')
+const { isContainerImageUrl } = require('../shared/utils')
 
 class KnativePackage {
   constructor(serverless, options) {
@@ -15,9 +16,13 @@ class KnativePackage {
     this.hooks = {
       'package:createDeploymentArtifacts': () =>
         BbPromise.all(
-          this.serverless.service
-            .getAllFunctions()
-            .map((func) => this.buildDockerImage(func).then(() => this.pushDockerImage(func)))
+          this.serverless.service.getAllFunctions().map((func) => {
+            const funcObject = this.serverless.service.getFunction(func)
+            if (isContainerImageUrl(funcObject.handler)) {
+              return BbPromise.resolve()
+            }
+            return this.buildDockerImage(func).then(() => this.pushDockerImage(func))
+          })
         )
     }
   }

@@ -28,11 +28,17 @@ function getFuncUrl(service, funcName, stage) {
   return `${getFuncName(service, funcName)}.${getNamespace(service, stage)}.example.com`
 }
 
+function isContainerImageUrl(str) {
+  // TODO: there might be a regex to check for container image URLs
+  return str.includes(':')
+}
+
 module.exports = {
   getNamespace,
   getRepository,
   getTag,
   getFuncName,
   getEventName,
-  getFuncUrl
+  getFuncUrl,
+  isContainerImageUrl
 }
