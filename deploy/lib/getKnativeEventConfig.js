@@ -1,6 +1,6 @@
 'use strict'
 
-const validEvents = ['custom', 'cron', 'gcpPubSub']
+const validEvents = ['custom', 'cron', 'gcpPubSub', 'awsSqs']
 const knativeVersion = 'v1alpha1'
 
 // TODO: update this when we're dealing with services other
@@ -53,6 +53,32 @@ function getGcpPubSubConfig(sinkName, eventConfig) {
   }
 }
 
+function getAwsSqsConfig(sinkName, eventConfig) {
+  const { secretName, secretKey, queue } = eventConfig
+  if (!secretName) {
+    throw new Error('"secretName" configuration missing for awsSqs event.')
+  }
+  if (!secretKey) {
+    throw new Error('"secretKey" configuration missing for awsSqs event.')
+  }
+  if (!queue) {
+    throw new Error('"queue" configuration missing for awsSqs event.')
+  }
+  return {
+    kind: 'AwsSqsSource',
+    knativeGroup: 'sources.eventing.knative.dev',
+    knativeVersion,
+    spec: {
+      awsCredsSecret: {
+        name: secretName,
+        key: secretKey
+      },
+      queueUrl: queue,
+      sink: getRef(sinkName)
+    }
+  }
+}
+
 function getCustomConfig(sinkName, eventConfig) {
   const { filter } = eventConfig
   return {
@@ -78,6 +104,8 @@ function getKnativeEventConfig(sinkName, eventName, eventConfig) {
     return getCronConfig(sinkName, eventConfig)
   } else if (eventName === 'gcpPubSub') {
     return getGcpPubSubConfig(sinkName, eventConfig)
+  } else if (eventName === 'awsSqs') {
+    return getAwsSqsConfig(sinkName, eventConfig)
   }
 
   return getCustomConfig(sinkName, eventConfig)
