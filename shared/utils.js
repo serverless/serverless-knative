@@ -11,9 +11,8 @@ function getRepository(username, name) {
   return `${username}/${name}`.toLowerCase()
 }
 
-function getTag() {
-  // TODO: this has to increment / be changed so that Knative picks up the changes
-  return 'latest'
+function getTag(tag = 'latest') {
+  return tag
 }
 
 function getFuncName(service, funcName) {

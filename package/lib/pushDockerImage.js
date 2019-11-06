@@ -22,7 +22,7 @@ function pushDockerImage(funcName) {
   dockerImage.context.credentials = credentials
 
   const repository = getRepository(username, name)
-  const tag = getTag()
+  const tag = getTag(this.serverless.instanceId)
 
   const inputs = {
     repository,

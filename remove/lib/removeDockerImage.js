@@ -17,7 +17,7 @@ function removeDockerImage(funcName) {
   const context = process.cwd()
   const dockerfile = funcObj.handler
   const repository = getRepository(username, name)
-  const tag = getTag()
+  const tag = getTag(this.serverless.instanceId)
 
   const inputs = {
     context,
