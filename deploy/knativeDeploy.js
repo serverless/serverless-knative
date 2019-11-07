@@ -56,10 +56,16 @@ class KnativeDeploy {
       // TODO: add validation which checks if service has functions
       // 'before:deploy:deploy: () => { ... }`
       'deploy:deploy': () => {
-        return BbPromise.bind(this)
-          .then(this.ensureNamespace)
-          .then(this.deployFunctions)
-          .then(this.deployEvents)
+        return (
+          BbPromise.bind(this)
+            .then(this.ensureNamespace)
+            // TODO: remove this delay as it's only used to
+            // ensure that the default Broker is up- and running
+            // when the triggers are registered
+            .then(() => BbPromise.delay(2000))
+            .then(this.deployFunctions)
+            .then(this.deployEvents)
+        )
       }
     }
   }
