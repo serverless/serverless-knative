@@ -1,23 +1,33 @@
 'use strict'
 
+const url = require('url')
 const fetch = require('node-fetch')
 const { Context } = require('@serverless/core')
 const KnativeServing = require('@serverless/knative-serving/')
-const { getFuncUrl } = require('../../shared/utils')
+const { getNamespace, getFuncName } = require('../../shared/utils')
 
 function invokeFunction() {
   const { service } = this.serverless.service
   const stage = this.provider.getStage()
 
+  const namespace = getNamespace(service, stage)
+
   const ctx = new Context()
   const serving = new KnativeServing(undefined, ctx)
 
-  return serving.info().then((res) => {
-    const ip = res.istioIngressIp
+  const inputs = {
+    namespace
+  }
 
-    return fetch(`http://${ip}`, {
+  return serving.info(inputs).then((res) => {
+    const functionUrl = res.serviceUrls[getFuncName(service, this.options.function)]
+    const host = url.parse(functionUrl, true).host
+    const ip = res.istioIngressIp
+    const externalUrl = ip.length > 0 ? `http://${ip}` : functionUrl
+
+    return fetch(externalUrl, {
       method: 'GET',
-      headers: { Host: `${getFuncUrl(service, this.options.function, stage)}` }
+      headers: { Host: host }
     }).then((result) => result.text())
   })
 }
