@@ -4,6 +4,9 @@
 // the user should be able to manipulate those
 
 function getNamespace(service, stage) {
+  if(process.env.KUBE_NAMESPACE) {
+    return process.env.KUBE_NAMESPACE
+  }
   return `sls-${service}-${stage}`
 }
 
