@@ -13,7 +13,7 @@ function ensureKnativeEvent(funcName, eventName, config) {
   const eventing = new KnativeEventing(undefined, ctx)
 
   const sinkName = getFuncName(service, funcName)
-  const namespace = getNamespace(service, stage)
+  const namespace = getNamespace(this.serverless, stage)
   // TODO: this should be unique since we can have multiple such event definitions
   const name = getEventName(sinkName, eventName)
 
