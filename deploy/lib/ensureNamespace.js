@@ -11,7 +11,7 @@ function ensureNamespace() {
   const ctx = new Context()
   const namespace = new KubernetesNamespace(undefined, ctx)
 
-  const name = getNamespace(this.serverless, stage)
+  const name = getNamespace(this.serverless)
 
   const inputs = {
     name,
