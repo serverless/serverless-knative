@@ -13,7 +13,7 @@ function removeNamespace() {
   const ctx = new Context()
   const namespace = new KubernetesNamespace(undefined, ctx)
 
-  const name = getNamespace(service, stage)
+  const name = getNamespace(this.serverless)
 
   const inputs = {
     name

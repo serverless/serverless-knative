@@ -18,7 +18,7 @@ function ensureKnativeService(funcName) {
   const ctx = new Context()
   const serving = new KnativeServing(undefined, ctx)
 
-  const namespace = getNamespace(service, stage)
+  const namespace = getNamespace(this.serverless)
   const name = getFuncName(service, funcName)
 
   let registryAddress

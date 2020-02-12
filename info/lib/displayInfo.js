@@ -9,7 +9,7 @@ function displayInfo() {
   const { service } = this.serverless.service
   const stage = this.provider.getStage()
 
-  const namespace = getNamespace(service, stage)
+  const namespace = getNamespace(this.serverless)
 
   const ctx = new Context()
   const serving = new KnativeServing(undefined, ctx)

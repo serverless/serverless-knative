@@ -3,7 +3,14 @@
 // TODO: make all of these functions configurable from the outside
 // the user should be able to manipulate those
 
-function getNamespace(service, stage) {
+function getNamespace(serverless) {
+  const k8s = serverless.service.provider.k8s
+  const namespace = k8s && k8s.namespace
+  if(namespace) {
+    return namespace
+  }
+  const { service } = serverless.service
+  const stage = serverless.service.provider.stage
   return `sls-${service}-${stage}`
 }
 
@@ -23,8 +30,9 @@ function getEventName(sinkName, eventName) {
   return `${sinkName}-${eventName}`.toLowerCase()
 }
 
-function getFuncUrl(service, funcName, stage) {
-  return `${getFuncName(service, funcName)}.${getNamespace(service, stage)}.example.com`
+function getFuncUrl(serverless, funcName) {
+  const { service } = serverless.service
+  return `${getFuncName(service, funcName)}.${getNamespace(serverless)}.example.com`
 }
 
 function isContainerImageUrl(str) {
