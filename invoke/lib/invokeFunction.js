@@ -8,7 +8,6 @@ const { getNamespace, getFuncName } = require('../../shared/utils')
 
 function invokeFunction() {
   const { service } = this.serverless.service
-  const stage = this.provider.getStage()
 
   const namespace = getNamespace(this.serverless)
 
@@ -21,7 +20,7 @@ function invokeFunction() {
 
   return serving.info(inputs).then((res) => {
     const functionUrl = res.serviceUrls[getFuncName(service, this.options.function)]
-    const host = url.parse(functionUrl, true).host
+    const { host } = url.parse(functionUrl, true)
     const ip = res.istioIngressIp
     const externalUrl = ip.length > 0 ? `http://${ip}` : functionUrl
 

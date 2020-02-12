@@ -7,7 +7,6 @@ const { getNamespace, getFuncName } = require('../../shared/utils')
 
 function displayInfo() {
   const { service } = this.serverless.service
-  const stage = this.provider.getStage()
 
   const namespace = getNamespace(this.serverless)
 

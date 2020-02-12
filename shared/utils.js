@@ -4,13 +4,13 @@
 // the user should be able to manipulate those
 
 function getNamespace(serverless) {
-  const k8s = serverless.service.provider.k8s
+  const { k8s } = serverless.service.provider
   const namespace = k8s && k8s.namespace
-  if(namespace) {
+  if (namespace) {
     return namespace
   }
   const { service } = serverless.service
-  const stage = serverless.service.provider.stage
+  const { stage } = serverless.service.provider
   return `sls-${service}-${stage}`
 }
 

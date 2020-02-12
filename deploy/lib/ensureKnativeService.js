@@ -13,7 +13,6 @@ const {
 function ensureKnativeService(funcName) {
   const { service } = this.serverless.service
   const { username } = this.serverless.service.provider.docker
-  const stage = this.provider.getStage()
 
   const ctx = new Context()
   const serving = new KnativeServing(undefined, ctx)

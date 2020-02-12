@@ -7,7 +7,6 @@ const { getNamespace, getFuncName, getEventName } = require('../../shared/utils'
 function ensureKnativeEvent(funcName, eventName, config) {
   const { knativeGroup, knativeVersion, kind, spec } = config
   const { service } = this.serverless.service
-  const stage = this.provider.getStage()
 
   const ctx = new Context()
   const eventing = new KnativeEventing(undefined, ctx)

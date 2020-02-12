@@ -7,9 +7,6 @@ const KubernetesNamespace = require('@serverless/kubernetes-namespace')
 const { getNamespace } = require('../../shared/utils')
 
 function removeNamespace() {
-  const { service } = this.serverless.service
-  const stage = this.provider.getStage()
-
   const ctx = new Context()
   const namespace = new KubernetesNamespace(undefined, ctx)
 
