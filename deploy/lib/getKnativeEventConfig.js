@@ -1,7 +1,7 @@
 'use strict'
 
 const validEvents = ['custom', 'cron', 'gcpPubSub', 'awsSqs', 'kafka']
-const knativeVersion = 'v1alpha1'
+const knativeVersion = 'v1'
 
 // TODO: update this when we're dealing with services other
 // than the ones deployed by the Serverless Framework (e.g. K8S services)
