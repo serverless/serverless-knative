@@ -13,6 +13,14 @@ function getRef(sinkName) {
   }
 }
 
+function getBrokerRef(brokerName) {
+  return {
+    apiVersion: `eventing.knative.dev/${knativeVersion}`,
+    kind: 'Broker',
+    name: brokerName
+  }
+}
+
 function getCronConfig(sinkName, eventConfig) {
   const { schedule, data } = eventConfig
   if (!schedule) {
@@ -124,10 +132,26 @@ function getCustomConfig(sinkName, eventConfig) {
     knativeGroup: 'eventing.knative.dev',
     knativeVersion,
     spec: {
+      broker: "default",
       filter,
       subscriber: {
         ref: getRef(sinkName)
       }
+    }
+  }
+}
+
+function getSinkBindingConfig(sinkName, eventConfig) {
+  const { filter } = eventConfig
+  return {
+    kind: 'SinkBinding',
+    knativeGroup: 'sources.knative.dev',
+    knativeVersion,
+    spec: {
+      sink: {
+        ref: getBrokerRef("default")
+      },
+      subject: getRef(sinkName)
     }
   }
 }
@@ -146,6 +170,8 @@ function getKnativeEventConfig(sinkName, eventName, eventConfig) {
     return getAwsSqsConfig(sinkName, eventConfig)
   } else if (eventName === 'kafka') {
     return getKafkaConfig(sinkName, eventConfig)
+  } else if (eventName === 'sinkBinding') {
+    return getSinkBindingConfig(sinkName, eventConfig)
   }
 
   return getCustomConfig(sinkName, eventConfig)
