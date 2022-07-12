@@ -1,6 +1,6 @@
 'use strict'
 
-const validEvents = ['custom', 'cron', 'gcpPubSub', 'awsSqs', 'kafka']
+const validEvents = ['custom', 'cron', 'gcpPubSub', 'awsSqs', 'kafka', 'sinkBinding']
 const knativeVersion = 'v1'
 
 // TODO: update this when we're dealing with services other
