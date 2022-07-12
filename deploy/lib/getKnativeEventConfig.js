@@ -131,6 +131,7 @@ function getCustomConfig(sinkName, eventConfig) {
     kind: 'Trigger',
     knativeGroup: 'eventing.knative.dev',
     knativeVersion,
+    configName: eventConfig.name,
     spec: {
       broker: "default",
       filter,
