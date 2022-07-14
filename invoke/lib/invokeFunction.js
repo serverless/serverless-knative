@@ -22,16 +22,21 @@ function invokeFunction() {
   return serving.info(inputs).then((res) => {
     const functionUrl = res.serviceUrls.get(getFuncName(service, this.options.function))
     const { host } = url.parse(functionUrl, true)
-    const ip = res.istioIngressIp
-    const externalUrl = ip && ip.length > 0 ? `http://${ip}` : functionUrl
-
-    return fetch(externalUrl, {
-      method: 'GET',
-      headers: { Host: host },
-      agent: new Agent({
-        rejectUnauthorized: false,
-     })  
-    }).then((result) => result.text())
+    const istioIngressIp = res.istioIngressIp
+    if (istioIngressIp && istioIngressIp.length > 0) {
+      return fetch(`http://${istioIngressIp}`, {
+        method: 'GET',
+        headers: { Host: host }  
+      }).then((result) => result.text())
+    } else {
+      return fetch(functionUrl, {
+        method: 'GET',
+        headers: { Host: host },
+        agent: new Agent({
+          rejectUnauthorized: false,
+       })  
+      }).then((result) => result.text())
+    }
   })
 }
 
