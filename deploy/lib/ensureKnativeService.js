@@ -35,11 +35,13 @@ function ensureKnativeService(funcName) {
     tag = image.substring(firstColon + 1)
   }
 
+  const autoscaler = funcObject.autoscaler
   const inputs = {
     name,
     repository,
     tag,
-    namespace
+    namespace,
+    autoscaler
   }
 
   if (registryAddress) {
