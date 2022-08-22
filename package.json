@@ -19,6 +19,7 @@
     "@serverless/kubernetes-namespace": "^0.2.0",
     "bluebird": "^3.7.1",
     "chalk": "^2.4.2",
+    "dockerode": "3.3.2",
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
