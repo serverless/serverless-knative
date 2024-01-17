@@ -23,7 +23,7 @@ function displayInfo() {
     message += `${chalk.yellow.underline('Service Information')}\n`
     message += `${chalk.yellow('service:')} ${service}\n`
     message += `${chalk.yellow('namespace:')} ${namespace}\n`
-    if (res.istioIngressIp.length > 0) {
+    if (res.istioIngressIp && res.istioIngressIp.length > 0) {
       message += `${chalk.yellow('ingress ip:')} ${res.istioIngressIp}\n`
     }
 
