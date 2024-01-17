@@ -9,7 +9,7 @@ function buildDockerImage(funcName) {
   const { service } = this.serverless.service
   const funcObj = this.serverless.service.getFunction(funcName)
   const buildContext = funcObj.context || process.cwd
-  const { username } = this.serverless.service.provider.docker
+  const { username, registry = '' } = this.serverless.service.provider.docker
   const name = getFuncName(service, funcName)
 
   const ctx = new Context()
@@ -17,7 +17,7 @@ function buildDockerImage(funcName) {
 
   const context = path.resolve(buildContext)
   const dockerfile = funcObj.handler
-  const repository = funcObj.image || getRepository(username, name)
+  const repository = funcObj.image ? [registry, funcObj.image].join('/') : getRepository(username, name)
   const tag = getTag(this.serverless.instanceId, funcObj.tagPrefix)
 
   const inputs = {
