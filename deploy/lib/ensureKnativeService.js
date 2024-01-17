@@ -21,11 +21,11 @@ function ensureKnativeService(funcName) {
   const name = getFuncName(service, funcName)
 
   let registryAddress
-  let repository = getRepository(username, name)
-  let tag = getTag(this.serverless.instanceId)
+  const funcObject = this.serverless.service.getFunction(funcName)
+  let repository = funcObject.image || getRepository(username, name)
+  let tag = getTag(this.serverless.instanceId, funcObject.tagPrefix)
 
   // see if we're re-using an existing image or if we need to reach out to our Container Registry
-  const funcObject = this.serverless.service.getFunction(funcName)
   if (isContainerImageUrl(funcObject.handler)) {
     const image = funcObject.handler
     const firstSlash = image.indexOf('/')
