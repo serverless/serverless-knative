@@ -12,7 +12,7 @@ const {
 
 function ensureKnativeService(funcName) {
   const { service } = this.serverless.service
-  const { username } = this.serverless.service.provider.docker
+  const { username, registry } = this.serverless.service.provider.docker
 
   const ctx = new Context()
   const serving = new KnativeServing(undefined, ctx)
@@ -42,8 +42,8 @@ function ensureKnativeService(funcName) {
     namespace
   }
 
-  if (registryAddress) {
-    Object.assign(inputs, { registryAddress })
+  if (registryAddress || registry) {
+    Object.assign(inputs, { registryAddress: registryAddress || registry })
   }
 
   this.serverless.cli.log(`Deploying Knative service for function "${inputs.name}"...`)
