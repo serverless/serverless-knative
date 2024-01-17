@@ -18,8 +18,8 @@ function getRepository(username, name) {
   return `${username}/${name}`.toLowerCase()
 }
 
-function getTag(tag = 'latest') {
-  return tag
+function getTag(tag = 'latest', prefix = '') {
+  return [prefix, tag].join('')
 }
 
 function getFuncName(service, funcName) {
