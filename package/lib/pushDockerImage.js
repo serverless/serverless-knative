@@ -7,7 +7,7 @@ const { getFuncName, getTag, getRepository } = require('../../shared/utils')
 function pushDockerImage(funcName) {
   const { service } = this.serverless.service
   const name = getFuncName(service, funcName)
-  const { username } = this.serverless.service.provider.docker
+  const { username, registry = '' } = this.serverless.service.provider.docker
   const { password } = this.serverless.service.provider.docker
   const credentials = {
     docker: {
@@ -22,7 +22,7 @@ function pushDockerImage(funcName) {
   dockerImage.context.credentials = credentials
 
   const { image, tagPrefix } = this.serverless.service.getFunction(funcName)
-  const repository = image || getRepository(username, name)
+  const repository = image ? [registry, image].join('/') : getRepository(username, name)
   const tag = getTag(this.serverless.instanceId, tagPrefix)
 
   const inputs = {
