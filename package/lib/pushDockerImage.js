@@ -21,8 +21,9 @@ function pushDockerImage(funcName) {
   // manually setting the credentials of the child-component here
   dockerImage.context.credentials = credentials
 
-  const repository = getRepository(username, name)
-  const tag = getTag(this.serverless.instanceId)
+  const { image, tagPrefix } = this.serverless.service.getFunction(funcName)
+  const repository = image || getRepository(username, name)
+  const tag = getTag(this.serverless.instanceId, tagPrefix)
 
   const inputs = {
     repository,
