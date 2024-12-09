@@ -1,3 +1,7 @@
+**📦 Archived - This repository is archived and preserved for reference only. No updates, issues, or pull requests will be accepted. If you have questions, please reach out to our support team.**
+
+---
+
 # Serverless Knative Plugin
 
 This plugin enables support for [Knative](https://knative.dev) within the [Serverless Framework](https://github.com/serverless/serverless).
