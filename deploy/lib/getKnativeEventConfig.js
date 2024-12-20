@@ -1,7 +1,7 @@
 'use strict'
 
-const validEvents = ['custom', 'cron', 'gcpPubSub', 'awsSqs', 'kafka']
-const knativeVersion = 'v1alpha1'
+const validEvents = ['custom', 'cron', 'gcpPubSub', 'awsSqs', 'kafka', 'sinkBinding']
+const knativeVersion = 'v1'
 
 // TODO: update this when we're dealing with services other
 // than the ones deployed by the Serverless Framework (e.g. K8S services)
@@ -10,6 +10,14 @@ function getRef(sinkName) {
     apiVersion: `serving.knative.dev/${knativeVersion}`,
     kind: 'Service',
     name: sinkName
+  }
+}
+
+function getBrokerRef(brokerName) {
+  return {
+    apiVersion: `eventing.knative.dev/${knativeVersion}`,
+    kind: 'Broker',
+    name: brokerName
   }
 }
 
@@ -123,11 +131,28 @@ function getCustomConfig(sinkName, eventConfig) {
     kind: 'Trigger',
     knativeGroup: 'eventing.knative.dev',
     knativeVersion,
+    configName: eventConfig.name,
     spec: {
+      broker: "default",
       filter,
       subscriber: {
         ref: getRef(sinkName)
       }
+    }
+  }
+}
+
+function getSinkBindingConfig(sinkName, eventConfig) {
+  const { filter } = eventConfig
+  return {
+    kind: 'SinkBinding',
+    knativeGroup: 'sources.knative.dev',
+    knativeVersion,
+    spec: {
+      sink: {
+        ref: getBrokerRef("default")
+      },
+      subject: getRef(sinkName)
     }
   }
 }
@@ -146,6 +171,8 @@ function getKnativeEventConfig(sinkName, eventName, eventConfig) {
     return getAwsSqsConfig(sinkName, eventConfig)
   } else if (eventName === 'kafka') {
     return getKafkaConfig(sinkName, eventConfig)
+  } else if (eventName === 'sinkBinding') {
+    return getSinkBindingConfig(sinkName, eventConfig)
   }
 
   return getCustomConfig(sinkName, eventConfig)

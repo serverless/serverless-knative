@@ -23,7 +23,7 @@ function displayInfo() {
     message += `${chalk.yellow.underline('Service Information')}\n`
     message += `${chalk.yellow('service:')} ${service}\n`
     message += `${chalk.yellow('namespace:')} ${namespace}\n`
-    if (res.istioIngressIp.length > 0) {
+    if (res.istioIngressIp && res.istioIngressIp.length > 0) {
       message += `${chalk.yellow('ingress ip:')} ${res.istioIngressIp}\n`
     }
 
@@ -35,7 +35,9 @@ function displayInfo() {
     }
     functionNames.forEach((funcName) => {
       message += `${chalk.yellow(funcName)}:\n`
-      message += `  - ${chalk.yellow('url:')} ${res.serviceUrls[getFuncName(service, funcName)]}\n`
+
+      const ksvcName = getFuncName(service, funcName)
+      message += `  - ${chalk.yellow('url:')} ${res.serviceUrls.get(ksvcName)}\n`
       const events = this.serverless.service.getAllEventsInFunction(funcName)
       if (events.length) {
         events.forEach((event) => {
